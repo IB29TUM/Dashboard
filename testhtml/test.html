@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crowd Analytics Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="data.js" defer></script>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css' rel='stylesheet' />
+    <script>
+        function showDashboard(dashboard) {
+            document.querySelectorAll('.dashboard').forEach(function (el) {
+                el.style.display = 'none';
+            });
+            document.getElementById(dashboard).style.display = 'block';
+
+            // Handle active state for navigation items
+            document.querySelectorAll('.nav-item').forEach(function (navItem) {
+                navItem.classList.remove('active');
+            });
+            document.querySelector(`.nav-item[data-dashboard="${dashboard}"]`).classList.add('active');
+        }
+    </script>
+    <script src="map.js" defer></script>
+</head>
+<body onload="showDashboard('overview')">
+    <header class="header">
+        <div class="header-left">
+            <img src="waynexus.png" alt="WayNexus Logo" class="logo">
+        </div>
+        <div class="header-right">
+            <img src="msg.png" alt="Messages" class="icon">
+            <img src="man.png" alt="User" class="icon">
+            <span>John Doe</span>
+        </div>
+    </header>
+    <div class="main-container">
+        <aside class="sidebar">
+            <nav>
+                <ul>
+                    <li class="nav-item" data-dashboard="overview" onclick="showDashboard('overview')">
+                        <img src="Overview.png" alt="Overview" class="nav-icon">
+                        <span class="nav-text">Overview</span>
+                    </li>
+                    <li class="section-title">Crowd Analytics</li>
+                    <li class="nav-item" data-dashboard="people-counting" onclick="showDashboard('people-counting')">
+                        <img src="People Counting.png" alt="People Counting" class="nav-icon">
+                        People counting
+                    </li>
+                    <li class="nav-item" data-dashboard="visitors-trajectories" onclick="showDashboard('visitors-trajectories')">
+                        <img src="Visitors' Trajectories.png" alt="Visitors' Trajectories" class="nav-icon">
+                        Visitors' Trajectories
+                    </li>
+                    <li class="nav-item" data-dashboard="average-duration" onclick="showDashboard('average-duration')">
+                        <img src="Average Duration.png" alt="Average Duration" class="nav-icon">
+                        Average Duration
+                    </li>
+                    <li class="nav-item" data-dashboard="dwell-time" onclick="showDashboard('dwell-time')">
+                        <img src="Dwell Time.png" alt="Dwell Time" class="nav-icon">
+                        Dwell Time
+                    </li>
+                    <li class="section-title">Sales</li>
+                    <li class="nav-item" data-dashboard="sales-tracking" onclick="showDashboard('sales-tracking')">
+                        <img src="Sales Tracking.png" alt="Sales Tracking" class="nav-icon">
+                        Sales Tracking
+                    </li>
+                    <li class="nav-item" data-dashboard="sales-journey" onclick="showDashboard('sales-journey')">
+                        <img src="Sales Journey.png" alt="Sales Journey" class="nav-icon">
+                        Sales Journey
+                    </li>
+                    <li class="section-title">Advanced Analytics</li>
+                    <li class="nav-item" data-dashboard="store-space-planning" onclick="showDashboard('store-space-planning')">
+                        <img src="Store space planning.png" alt="Store space planning" class="nav-icon">
+                        Store space planning
+                    </li>
+                    <li class="nav-item" data-dashboard="product-simulator" onclick="showDashboard('product-simulator')">
+                        <img src="Product simulator.png" alt="Product simulator" class="nav-icon">
+                        Product simulator
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+        <main class="content">
+            <!-- Overview Dashboard -->
+            <div id="overview" class="dashboard">
+                <h2>Overview of crowd analytics: Hauptbahnhof, Munich</h2>
+                <div class="charts-container">
+                    <div class="chart-box">
+                        <img src="images/Total No Of Visitors.png" alt="Total No Of Visitors">
+                    </div>
+                    <div class="chart-box">
+                        <img src="images/Average Dwell Time.png" alt="Average Dwell Time">
+                    </div>
+                    <div class="chart-box">
+                        <img src="images/Units Sold.png" alt="Units Sold">
+                    </div>
+                    <div class="chart-box">
+                        <img src="images/Revenue Generated.png" alt="Revenue Generated">
+                    </div>
+                    <div class="chart-box">
+                        <img src="images/Product specific Dwell Time.png" alt="Product specific Dwell Time">
+                    </div>
+                    <div class="chart-box">
+                        <img src="images/Sales Growth by Product.png" alt="Sales Growth by Product">
+                    </div>
+                    <div class="chart-box">
+                        <img src="images/Total Visited Area.png" alt="Total Visited Area">
+                    </div>
+                    <div class="chart-box">
+                        <img src="images/Total Visitors Today : Yesterday.png" alt="Total Visitors Today : Yesterday">
+                    </div>
+                    <div class="chart-box">
+                        <img src="images/Average Dwell Time Today : Yesterday.png" alt="Average Dwell Time Today : Yesterday">
+                    </div>
+                    <div class="chart-box">
+                        <img src="images/Total Units Sold Today : Yesterday.png" alt="Total Units Sold Today : Yesterday">
+                    </div>
+                    <div class="chart-box">
+                        <img src="images/Total Revenue Today : Yesterday.png" alt="Total Revenue Today : Yesterday">
+                    </div>
+                </div>
+            </div>
+            <!-- People Counting Dashboard -->
+            <div id="people-counting" class="dashboard">
+                <h2>Crowd analytics &gt; People counting</h2>
+                <div class="people-counting-container">
+                    <div class="summary-boxes">
+                        <div class="summary-box" id="polygon-a-count">
+                            <div class="count">13</div>
+                            <div class="label">Polygon A</div>
+                        </div>
+                        <div class="summary-box" id="polygon-b-count">
+                            <div class="count">16</div>
+                            <div class="label">Polygon B</div>
+                        </div>
+                        <div class="summary-box" id="total-count">
+                            <div class="count">29</div>
+                            <div class="label">Total Count</div>
+                        </div>
+                    </div>
+                    <div class="people-counting-content">
+                        <div class="pie-chart">
+                            <h3>Total Visited Area</h3>
+                            <canvas id="people-counting-chart" class="pie-chart-placeholder"></canvas>
+                        </div>
+                        <div class="floor-plan">
+                            <h3>Plan</h3>
+                            <img src="plan.png" alt="Floor Plan" class="floor-plan-placeholder">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Average Duration Dashboard -->
+            <div id="average-duration" class="dashboard">
+                <h2>Crowd analytics &gt; Average Duration</h2>
+                <div class="average-duration-container">
+                    <div class="summary-boxes">
+                        <div class="summary-box" id="average-polygon-a-duration">
+                            <div class="count">0 </div>
+                            <div class="label">Polygon A</div>
+                        </div>
+                        <div class="summary-box" id="average-polygon-b-duration">
+                            <div class="count">0 </div>
+                            <div class="label">Polygon B</div>
+                        </div>
+                    </div>
+                    <div class="average-duration-content">
+                        <div class="pie-chart">
+                            <h3>Total Visited Area</h3>
+                            <canvas id="average-duration-chart" class="pie-chart-placeholder"></canvas>
+                        </div>
+                        <div class="floor-plan">
+                            <h3>Plan</h3>
+                            <img src="plan.png" alt="Floor Plan" class="floor-plan-placeholder">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Visitors' Trajectories Dashboard -->
+            <div id="visitors-trajectories" class="dashboard">
+                <h2>Crowd analytics &gt; Visitors' Trajectories</h2>
+                <div class="map-container">
+                    <div id="map"></div>
+                </div>
+            </div>
+            <!-- Other dashboards can be added here similarly -->
+        </main>
+    </div>
+</body>
+</html>
